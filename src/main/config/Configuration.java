@@ -1,5 +1,7 @@
 package main.config;
 
+import main.util.LoggerUtil;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -39,6 +41,7 @@ public class Configuration implements Serializable {
         this.ticketReleaseRate = 10;
         this.customerRetrievalRate = 5;
         this.maxTicketCapacity = 50;
+        LoggerUtil.info("Default configuration initialized.");
     }
 
     /**
@@ -47,14 +50,19 @@ public class Configuration implements Serializable {
      *
      * @param totalTickets Total number of tickets in the system
      * @param ticketReleaseRate Rate at which the tickets are released by vendors.
-     * @param customerRetrievalRate Rate at which the customers attempt to retrieve the tickets.
+     * @param customerRetrievalRate The Rate at which the customers attempt to retrieve the tickets.
      * @param maxTicketCapacity Maximum capacity of tickets in the pool.
      */
     public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity){
+        if (totalTickets < 0 || ticketReleaseRate < 0 || customerRetrievalRate < 0 || maxTicketCapacity <= 0) {
+            LoggerUtil.error("Invalid configuration parameters.");
+            throw new IllegalArgumentException("Invalid configuration values provided.");
+        }
         this.totalTickets = totalTickets;
         this.ticketReleaseRate = ticketReleaseRate;
         this.customerRetrievalRate = customerRetrievalRate;
         this.maxTicketCapacity =maxTicketCapacity;
+        LoggerUtil.info("Configuration initialized with custom values.");
     }
 
     /**
@@ -74,9 +82,11 @@ public class Configuration implements Serializable {
      */
     public void setTotalTickets(int totalTickets) {
         if (totalTickets < 0){
+            LoggerUtil.error("Attempt to set negative totalTickets: " + totalTickets);
             throw new IllegalArgumentException("Total tickets cannot be negative.");
         }
         this.totalTickets = totalTickets;
+        LoggerUtil.info("Total tickets updated to: " + totalTickets);
     }
 
     /**
@@ -96,9 +106,11 @@ public class Configuration implements Serializable {
      */
     public void setTicketReleaseRate(int ticketReleaseRate) {
         if (ticketReleaseRate < 0){
+            LoggerUtil.error("Attempt to set negative ticketReleaseRate: " + ticketReleaseRate);
             throw new IllegalArgumentException("Ticket release rate cannot be negative.");
         }
         this.ticketReleaseRate = ticketReleaseRate;
+        LoggerUtil.info("Ticket release rate updated to: " + ticketReleaseRate);
     }
 
     /**
@@ -111,16 +123,18 @@ public class Configuration implements Serializable {
     }
 
     /**
-     * Gets the rate at which the customer attempt to retrieve tickets.
+     * Gets the rate at which the customer attempts to retrieve tickets.
      *
      * @param customerRetrievalRate the customer retrieval rate
      * @throws IllegalArgumentException if the value is negative.
      */
     public void setCustomerRetrievalRate(int customerRetrievalRate) {
         if (customerRetrievalRate < 0){
+            LoggerUtil.error("Attempt to set negative customerRetrievalRate: " + customerRetrievalRate);
             throw new IllegalArgumentException("Customer retrieval rate cannot be negative.");
         }
         this.customerRetrievalRate = customerRetrievalRate;
+        LoggerUtil.info("Customer retrieval rate updated to: " + customerRetrievalRate);
     }
 
     /**
@@ -139,10 +153,12 @@ public class Configuration implements Serializable {
      * @throws IllegalArgumentException if the value is negative or zero.
      */
     public void setMaxTicketCapacity(int maxTicketCapacity) {
-        if (maxTicketCapacity < 0){
+        if (maxTicketCapacity <= 0){
+            LoggerUtil.error("Attempt to set non-positive maxTicketCapacity: " + maxTicketCapacity);
             throw new IllegalArgumentException("Maximum ticket capacity must be greater than zero.");
         }
         this.maxTicketCapacity = maxTicketCapacity;
+        LoggerUtil.info("Maximum ticket capacity updated to: " + maxTicketCapacity);
     }
 
     @Override
