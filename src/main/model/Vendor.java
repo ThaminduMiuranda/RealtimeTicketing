@@ -2,11 +2,14 @@ package main.model;
 
 import main.util.LoggerUtil;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Vendor implements Runnable{
 
     private final String vendorId;
     private final int ticketsReleaseRate;
     private final TicketPool ticketPool;
+    private static final AtomicInteger ticketCounter = new AtomicInteger();
     public volatile boolean isRunning = true;
 
     public Vendor(String vendorId, int ticketsReleaseRate, TicketPool ticketPool) {
@@ -33,12 +36,12 @@ public class Vendor implements Runnable{
         while (isRunning) {
             try {
                 for (int i = 0; i < ticketsReleaseRate; i++) {
-                    String ticketId = "Vendor-" + vendorId + "-Ticket-" + System.currentTimeMillis();
+                    String ticketId = "Vendor-" + vendorId + "-Ticket-" + ticketCounter.incrementAndGet();
                     ticketPool.addTicket(ticketId);
                 }
                 Thread.sleep(1000);
             } catch (IllegalStateException e) {
-                LoggerUtil.warn("Vendeor " + vendorId + ": " + e.getMessage());
+                LoggerUtil.warn("Vendor " + vendorId + ": " + e.getMessage());
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException interruptedException) {
