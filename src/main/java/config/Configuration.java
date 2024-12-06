@@ -1,9 +1,10 @@
-package main.config;
+package config;
 
-import main.util.LoggerUtil;
+import util.LoggerUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * The {@code Configuration} class is the system configuration for the Real-Time Event Ticketing System. It includes parameters to set up the ticketing environment.
@@ -26,6 +27,7 @@ public class Configuration implements Serializable {
      */
     @Serial
     private static final long serialVersionUID = 1L;
+    private static final String CONFIG_FILE = "system_config.json";
 
     private int totalTickets;
     private int ticketReleaseRate;
@@ -41,7 +43,6 @@ public class Configuration implements Serializable {
         this.ticketReleaseRate = 10;
         this.customerRetrievalRate = 5;
         this.maxTicketCapacity = 50;
-        LoggerUtil.info("Default configuration initialized.");
     }
 
     /**
@@ -63,6 +64,34 @@ public class Configuration implements Serializable {
         this.customerRetrievalRate = customerRetrievalRate;
         this.maxTicketCapacity =maxTicketCapacity;
         LoggerUtil.info("Configuration initialized with custom values.");
+    }
+
+    public static Configuration loadConfiguration(){
+        File file = new File(CONFIG_FILE);
+        if (file.exists()){
+            try (Reader reader = new FileReader(file)){
+                    Gson gson = new Gson();
+                    Configuration config = gson.fromJson(reader, Configuration.class);
+                    LoggerUtil.info("Configuration loaded from "+CONFIG_FILE);
+                    return config;
+            } catch (IOException e){
+                LoggerUtil.error("Error loading the configuration: "+e.getMessage());
+            }
+
+        }else {
+            LoggerUtil.warn("Configuration not found. Using the default configuration. ");
+        }
+        return new Configuration();
+    }
+
+    public void saveConfiguration(){
+        try (Writer writer = new FileWriter(CONFIG_FILE)){
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(this,writer);
+            LoggerUtil.info("Configuration saved to "+ CONFIG_FILE);
+        }catch (IOException e){
+            LoggerUtil.error("Error saving the configuration: "+e.getMessage());
+        }
     }
 
     /**

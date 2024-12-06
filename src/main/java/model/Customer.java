@@ -1,6 +1,6 @@
-package main.model;
+package model;
 
-import main.util.LoggerUtil;
+import util.LoggerUtil;
 
 public class Customer implements Runnable{
 
@@ -43,6 +43,9 @@ public class Customer implements Runnable{
     public void run() {
         LoggerUtil.info("Customer "+customerId+" started.");
         while (isRunning){
+//            if(!ticketPool.isSimulationComplete()){
+//                isRunning = false;
+//            }
             try {
                 for (int i = 0; i < ticketRetrievalRate; i++) {
                     try {
