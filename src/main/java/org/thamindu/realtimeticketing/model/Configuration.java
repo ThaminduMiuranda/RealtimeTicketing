@@ -22,7 +22,7 @@ import java.io.*;
 public class Configuration implements Serializable {
 
     /**
-     * A unique identifier for this Serializable class.
+     * A e identifier for this Serializable class.
      * Ensures compatibility during the serialization and deserialization processes.
      */
     @Serial
