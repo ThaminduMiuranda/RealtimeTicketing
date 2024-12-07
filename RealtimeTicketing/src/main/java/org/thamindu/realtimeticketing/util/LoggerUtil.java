@@ -1,4 +1,4 @@
-package com.W2051890.ticketing_system.util;
+package org.thamindu.realtimeticketing.util;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

@@ -1,11 +1,11 @@
-package com.W2051890.ticketing_system;
+package org.thamindu.realtimeticketing;
 
-import com.W2051890.ticketing_system.model.Configuration;
-import com.W2051890.ticketing_system.model.Customer;
-import com.W2051890.ticketing_system.model.TicketPool;
-import com.W2051890.ticketing_system.model.Vendor;
-import com.W2051890.ticketing_system.service.InputService;
-import com.W2051890.ticketing_system.util.LoggerUtil;
+import org.thamindu.realtimeticketing.model.Configuration;
+import org.thamindu.realtimeticketing.model.Customer;
+import org.thamindu.realtimeticketing.model.TicketPool;
+import org.thamindu.realtimeticketing.model.Vendor;
+import org.thamindu.realtimeticketing.service.InputService;
+import org.thamindu.realtimeticketing.util.LoggerUtil;
 
 import java.io.File;
 import java.util.ArrayList;

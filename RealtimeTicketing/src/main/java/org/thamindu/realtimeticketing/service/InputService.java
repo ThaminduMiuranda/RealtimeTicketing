@@ -1,6 +1,6 @@
-package com.W2051890.ticketing_system.service;
+package org.thamindu.realtimeticketing.service;
 
-import com.W2051890.ticketing_system.util.LoggerUtil;
+import org.thamindu.realtimeticketing.util.LoggerUtil;
 
 import java.util.Scanner;
 

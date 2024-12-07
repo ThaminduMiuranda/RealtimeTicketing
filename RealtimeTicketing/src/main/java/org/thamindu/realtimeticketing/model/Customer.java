@@ -1,6 +1,6 @@
-package com.W2051890.ticketing_system.model;
+package org.thamindu.realtimeticketing.model;
 
-import com.W2051890.ticketing_system.util.LoggerUtil;
+import org.thamindu.realtimeticketing.util.LoggerUtil;
 
 public class Customer implements Runnable{
 
