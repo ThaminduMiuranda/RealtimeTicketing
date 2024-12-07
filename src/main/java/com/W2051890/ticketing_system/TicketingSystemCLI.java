@@ -1,9 +1,11 @@
-import config.Configuration;
-import model.Customer;
-import model.TicketPool;
-import model.Vendor;
-import service.InputService;
-import util.LoggerUtil;
+package com.W2051890.ticketing_system;
+
+import com.W2051890.ticketing_system.model.Configuration;
+import com.W2051890.ticketing_system.model.Customer;
+import com.W2051890.ticketing_system.model.TicketPool;
+import com.W2051890.ticketing_system.model.Vendor;
+import com.W2051890.ticketing_system.service.InputService;
+import com.W2051890.ticketing_system.util.LoggerUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Main {
+public class TicketingSystemCLI {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -72,7 +74,7 @@ public class Main {
             try {
                 Thread.sleep(1000);
             }catch (InterruptedException e){
-                LoggerUtil.error("Main thread interrupted.");
+                LoggerUtil.error("com.W2051890.ticketing_system.Main thread interrupted.");
                 Thread.currentThread().interrupt();
                 break;
             }

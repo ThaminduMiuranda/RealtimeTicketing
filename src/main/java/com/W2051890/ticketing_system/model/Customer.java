@@ -1,6 +1,6 @@
-package model;
+package com.W2051890.ticketing_system.model;
 
-import util.LoggerUtil;
+import com.W2051890.ticketing_system.util.LoggerUtil;
 
 public class Customer implements Runnable{
 

@@ -1,10 +1,9 @@
-package model;
+package com.W2051890.ticketing_system.model;
 
-import util.LoggerUtil;
+import com.W2051890.ticketing_system.util.LoggerUtil;
 
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -18,7 +17,7 @@ import java.util.concurrent.Semaphore;
  */
 public class TicketPool {
 
-    private final List<String> tickets;
+    private final Queue<String> tickets;
     private final int maxCapacity;
     private final Semaphore ticketsAvailable;
     private final Semaphore spaceAvailable;
@@ -37,7 +36,7 @@ public class TicketPool {
             LoggerUtil.error("Invalid maximum capacity: " + maxCapacity);
             throw new IllegalArgumentException("Max capacity must be greater than zero.");
         }
-        this.tickets = Collections.synchronizedList(new LinkedList<>());
+        this.tickets = new LinkedList<>();
         this.maxCapacity = maxCapacity;
         this.totalTickets = totalTickets;
         this.ticketsAvailable = new Semaphore(0); //initially no tickets available
@@ -97,7 +96,7 @@ public class TicketPool {
                 if (tickets.isEmpty()){
                     LoggerUtil.info("Ticket pool is empty. Waiting...");
                 }
-                ticket = tickets.removeFirst(); // Remove ticket from the queue.
+                ticket = tickets.poll(); // Remove ticket from the queue.
                 if (ticket != null) {
                     LoggerUtil.info("Ticket removed: " + ticket);
                 }

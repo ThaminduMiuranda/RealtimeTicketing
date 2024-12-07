@@ -1,4 +1,4 @@
-package util;
+package com.W2051890.ticketing_system.util;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

@@ -1,6 +1,6 @@
-package config;
+package com.W2051890.ticketing_system.model;
 
-import util.LoggerUtil;
+import com.W2051890.ticketing_system.util.LoggerUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

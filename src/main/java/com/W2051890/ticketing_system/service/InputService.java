@@ -1,6 +1,6 @@
-package service;
+package com.W2051890.ticketing_system.service;
 
-import util.LoggerUtil;
+import com.W2051890.ticketing_system.util.LoggerUtil;
 
 import java.util.Scanner;
 
