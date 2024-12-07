@@ -2,14 +2,11 @@ package model;
 
 import util.LoggerUtil;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Vendor implements Runnable{
 
     private final String vendorId;
     private final int ticketsReleaseRate;
     private final TicketPool ticketPool;
-    private static final AtomicInteger ticketCounter = new AtomicInteger();
     public volatile boolean isRunning = true;
 
     public Vendor(String vendorId, int ticketsReleaseRate, TicketPool ticketPool) {
@@ -31,40 +28,13 @@ public class Vendor implements Runnable{
     }
 
     @Override
-//    public void run(){
-//        LoggerUtil.info("Vendor "+ vendorId + " started.");
-//        while (isRunning) {
-//            try {
-//                for (int i = 0; i < ticketsReleaseRate; i++) {
-//                    String ticketId = "Vendor-" + vendorId + "-Ticket-" + ticketCounter.incrementAndGet();
-//                    ticketPool.addTicket(ticketId);
-//                }
-//                Thread.sleep(1000);
-//            } catch (IllegalStateException e) {
-//                LoggerUtil.warn("Vendor " + vendorId + ": " + e.getMessage());
-//                try {
-//                    Thread.sleep(500);
-//                } catch (InterruptedException interruptedException) {
-//                    LoggerUtil.error("Vendor " + vendorId + " interrupted while waiting.");
-//                    Thread.currentThread().interrupt();
-//                    break;
-//                }
-//            } catch (InterruptedException e){
-//                LoggerUtil.error("Vendor "+vendorId+" interrupted.");
-//                Thread.currentThread().interrupt();
-//                break;
-//            }
-//        }
-//        LoggerUtil.info("Vendor "+vendorId+" stopped.");
-//
-//    }
     public void run(){
         LoggerUtil.info("Vendor "+ vendorId + " started.");
         while (isRunning){
             try{
                 for (int i = 0; i < ticketsReleaseRate; i++) {
-                    String ticketId = "Vendor-" + vendorId + "-Ticket-" + ticketCounter.incrementAndGet();
-                    if (!ticketPool.addTicket(ticketId)){
+                    String ticketBase = "Vendor-" + vendorId + "-Ticket";
+                    if (!ticketPool.addTicket(ticketBase)){
                         LoggerUtil.info("Vendor "+vendorId+" has completed ticket addition.");
                         stop();
                         break;
