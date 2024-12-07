@@ -5,9 +5,7 @@ import util.LoggerUtil;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
 
 /**
  * The {@code TicketPool} class is the ticket queue, which is a shared resource across the Real-Time Event Ticketing
@@ -22,13 +20,11 @@ public class TicketPool {
 
     private final List<String> tickets;
     private final int maxCapacity;
-    private int totalTickets;
-    private int ticketsAdded;
-    private int ticketsSold;
-    private final Lock lock = new ReentrantLock();
-    private final Condition notFull = lock.newCondition();
-    private final Condition notEmpty = lock.newCondition();
+    private final Semaphore ticketsAvailable;
+    private final Semaphore spaceAvailable;
 
+    private final int totalTickets;
+    private int ticketsAdded = 0;
 
     /**
      * Constructs a {@code TicketPool} with a specific maximum capacity
@@ -44,38 +40,43 @@ public class TicketPool {
         this.tickets = Collections.synchronizedList(new LinkedList<>());
         this.maxCapacity = maxCapacity;
         this.totalTickets = totalTickets;
-        this.ticketsAdded = 0;
-        this.ticketsSold = 0;
-        LoggerUtil.info("TicketPool initialised with max capacity: " + maxCapacity);
+        this.ticketsAvailable = new Semaphore(0); //initially no tickets available
+        this.spaceAvailable = new Semaphore(maxCapacity); //initially, all space is available
     }
 
     /**
      * Adds tickets to the pool.
      *
-     * @param ticket the ticket to be added.
+     * @param ticketBase the ticket to be added.
      * @throws IllegalStateException if adding the ticket exceeds the maximum capacity of the ticket pool.
      */
-    public boolean addTicket(String ticket){
-        lock.lock();
+    public boolean addTicket(String ticketBase){
         try{
-            if (ticketsAdded >= totalTickets){
-                return false;
+            //waits for space become available.
+            spaceAvailable.acquire();
+
+            synchronized (this){
+                if (ticketsAdded >= totalTickets){
+                    spaceAvailable.release(); // Release the permit back
+                    return true;
+                }
+                if (tickets.size() >= maxCapacity){
+                    return false;
+                }
+                String ticketId = ticketBase + "-" + ticketsAdded;
+                tickets.add(ticketId);
+                ticketsAdded++;
+                LoggerUtil.info("Ticket added: "+ticketId+" (Total added: "+ ticketsAdded+")");
+                if (tickets.size() >= maxCapacity){
+                    LoggerUtil.info("Max capacity reached. waiting...");
+                }
             }
-            while (tickets.size() >= maxCapacity){
-                LoggerUtil.warn("Cannot add ticket. Pool has reached its maximum capacity. Waiting...");
-                notFull.await();
-            }
-            tickets.add(ticket);
-            ticketsAdded++;
-            LoggerUtil.info("Ticket added: "+ticket);
-            notEmpty.signalAll(); //Notify the waiting threads to remove tickets
+            ticketsAvailable.release();
             return true;
         } catch (InterruptedException e){
             LoggerUtil.error("Thread interrupted while waiting to add tickets.");
             Thread.currentThread().interrupt();
             return false;
-        } finally {
-            lock.unlock();
         }
     }
 
@@ -86,25 +87,27 @@ public class TicketPool {
      * @throws IllegalStateException if the pool is empty.
      */
     public String removeTicket(){
-        lock.lock();
-
         try{
-            while (tickets.isEmpty()) {
-                LoggerUtil.warn("Cannot retrieve tickets. Pool is empty. Waiting...");
-                notEmpty.await();
+            //waits for space become available.
+            ticketsAvailable.acquire();
 
+            if (ticketsAdded >= totalTickets){
+                ticketsAvailable.release(); // Release the permit back
             }
-            String ticket = tickets.removeFirst();
-            ticketsSold++;
-            LoggerUtil.info("Ticket removed: " + ticket);
-            notFull.signalAll(); // Notify any waiting threads to add tickets.
+            String ticket;
+            synchronized (this){
+                ticket = tickets.removeFirst(); // Remove ticket from the queue.
+                if (ticket != null) {
+                    LoggerUtil.info("Ticket removed: " + ticket);
+                }
+            }
+            //Signals that space is now available
+            spaceAvailable.release();
             return ticket;
         } catch (InterruptedException e){
-            LoggerUtil.error("Thread interrupted while waiting to remove ticket.");
+            LoggerUtil.error("Thread interrupted while waiting to add tickets.");
             Thread.currentThread().interrupt();
             return null;
-        } finally {
-            lock.unlock();
         }
 
     }
@@ -115,14 +118,9 @@ public class TicketPool {
      * @return the number of tickets currently in the pool.
      */
     public int getCurrentSize() {
-        lock.lock();
-        try{
-            int size = tickets.size();
-            LoggerUtil.info("Current pool size queried: " + size);
-            return size;
-        } finally {
-            lock.unlock();
-        }
+        int size = tickets.size();
+        LoggerUtil.info("Current pool size queried: " + size);
+        return size;
     }
 
     /**
@@ -135,25 +133,17 @@ public class TicketPool {
     }
 
     public boolean isSimulationComplete(){
-        lock.lock();
-        try{
-            return (ticketsAdded >= totalTickets && ticketsSold >= ticketsAdded);
-        } finally {
-            lock.unlock();
+        synchronized (this){
+            return (ticketsAdded >= totalTickets && tickets.isEmpty());
         }
     }
 
     @Override
     public String toString(){
-        lock.lock();
-        try{
-            return "TicketPool{" +
-                    "tickets=" + tickets +
-                    ", maxCapacity=" + maxCapacity +
-                    "}";
-        } finally {
-            lock.unlock();
-        }
+        return "TicketPool{" +
+                "tickets=" + tickets +
+                ", maxCapacity=" + maxCapacity +
+                "}";
     }
 
 
