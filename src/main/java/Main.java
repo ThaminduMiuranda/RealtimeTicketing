@@ -2,6 +2,7 @@ import config.Configuration;
 import model.Customer;
 import model.TicketPool;
 import model.Vendor;
+import service.InputService;
 import util.LoggerUtil;
 
 import java.io.File;
@@ -20,17 +21,17 @@ public class Main {
             System.out.println("No configuration file found.");
             System.out.println("Do you want to create a new configuration? (yes/no):");
             String response = scanner.nextLine().trim().toLowerCase();
-            if (response.equals("yes")){
+            if (response.equals("yes")|| response.equals("y")){
                 config = configureSystem();
                 config.saveConfiguration();
             }
         } else {
             System.out.println("Configuration file found. Do you want to use the existing configuration? (yes/no): ");
             String response = scanner.nextLine().trim().toLowerCase();
-            if (response.equals("no")) {
+            if (response.equals("no") || response.equals("n")) {
                 System.out.println("Do you want to create a new configuration? (yes/no):");
                 String secondResponse = scanner.nextLine().trim().toLowerCase();
-                if (secondResponse.equals("yes")){
+                if (secondResponse.equals("yes") || secondResponse.equals("y")){
                     config = configureSystem();
                     config.saveConfiguration();
                 }
@@ -88,20 +89,15 @@ public class Main {
 
     public static Configuration configureSystem(){
         Scanner scanner = new Scanner(System.in);
+        InputService inputService = new InputService(scanner);
+
         System.out.println("Welcome to the Real-Time Event Ticketing System!");
         System.out.println("Please provide following details to configure the system: ");
 
-        System.out.println("Total number of tickets: ");
-        int totalTickets = scanner.nextInt();
-
-        System.out.println("Ticket release rate: ");
-        int ticketReleaseRate = scanner.nextInt();
-
-        System.out.println("Customer retrieval rate: ");
-        int customerRetrievalRate = scanner.nextInt();
-
-        System.out.println("Maximum ticket capacity: ");
-        int maxTicketCapacity = scanner.nextInt();
+        int totalTickets = inputService.getValidInteger("Total number of tickets (must be greater than 0): ", 1, Integer.MAX_VALUE);
+        int ticketReleaseRate = inputService.getValidInteger("Ticket release rate (must be greater than 0): ", 1, Integer.MAX_VALUE);
+        int customerRetrievalRate = inputService.getValidInteger("Customer retrieval rate (must be greater than 0): ",1, Integer.MAX_VALUE);
+        int maxTicketCapacity = inputService.getValidInteger("Maximum ticket capacity (must be greater than 0): ",1,Integer.MAX_VALUE);
 
         return new Configuration(totalTickets,ticketReleaseRate,customerRetrievalRate,maxTicketCapacity);
     }
