@@ -61,15 +61,13 @@ public class TicketPool {
                     return true;
                 }
                 if (tickets.size() >= maxCapacity){
+                    LoggerUtil.info("Max capacity reached. Waiting...");
                     return false;
                 }
                 String ticketId = ticketBase + "-" + ticketsAdded;
                 tickets.add(ticketId);
                 ticketsAdded++;
                 LoggerUtil.info("Ticket added: "+ticketId+" (Total added: "+ ticketsAdded+")");
-                if (tickets.size() >= maxCapacity){
-                    LoggerUtil.info("Max capacity reached. waiting...");
-                }
             }
             ticketsAvailable.release();
             return true;
@@ -96,10 +94,14 @@ public class TicketPool {
             }
             String ticket;
             synchronized (this){
+                if (tickets.isEmpty()){
+                    LoggerUtil.info("Ticket pool is empty. Waiting...");
+                }
                 ticket = tickets.removeFirst(); // Remove ticket from the queue.
                 if (ticket != null) {
                     LoggerUtil.info("Ticket removed: " + ticket);
                 }
+
             }
             //Signals that space is now available
             spaceAvailable.release();
