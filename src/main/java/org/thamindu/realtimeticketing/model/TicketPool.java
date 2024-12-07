@@ -1,9 +1,14 @@
 package org.thamindu.realtimeticketing.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.thamindu.realtimeticketing.util.LoggerUtil;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -17,7 +22,9 @@ import java.util.concurrent.Semaphore;
  */
 public class TicketPool {
 
-    private final Queue<String> tickets;
+    private static final Logger logger = LogManager.getLogger(TicketPool.class);
+
+    private final List<String> tickets;
     private final int maxCapacity;
     private final Semaphore ticketsAvailable;
     private final Semaphore spaceAvailable;
@@ -33,10 +40,11 @@ public class TicketPool {
      */
     public TicketPool(int maxCapacity, int totalTickets){
         if (maxCapacity <= 0) {
-            LoggerUtil.error("Invalid maximum capacity: " + maxCapacity);
+//            LoggerUtil.error("Invalid maximum capacity: " + maxCapacity);
+            logger.error("Invalid maximum capacity: {}", maxCapacity);
             throw new IllegalArgumentException("Max capacity must be greater than zero.");
         }
-        this.tickets = new LinkedList<>();
+        this.tickets = Collections.synchronizedList(new LinkedList<>());
         this.maxCapacity = maxCapacity;
         this.totalTickets = totalTickets;
         this.ticketsAvailable = new Semaphore(0); //initially no tickets available
@@ -60,18 +68,21 @@ public class TicketPool {
                     return true;
                 }
                 if (tickets.size() >= maxCapacity){
-                    LoggerUtil.info("Max capacity reached. Waiting...");
+//                    LoggerUtil.info("Max capacity reached. Waiting...");
+                    logger.info("Max capacity reached. Waiting...");
                     return false;
                 }
                 String ticketId = ticketBase + "-" + ticketsAdded;
                 tickets.add(ticketId);
                 ticketsAdded++;
-                LoggerUtil.info("Ticket added: "+ticketId+" (Total added: "+ ticketsAdded+")");
+//                LoggerUtil.info("Ticket added: "+ticketId+" (Total added: "+ ticketsAdded+")");
+                logger.info("Ticket added: {} (Total added: {})", ticketId, ticketsAdded);
             }
             ticketsAvailable.release();
             return true;
         } catch (InterruptedException e){
-            LoggerUtil.error("Thread interrupted while waiting to add tickets.");
+//            LoggerUtil.error("Thread interrupted while waiting to add tickets.");
+            logger.error("Thread interrupted while waiting to add tickets while waiting to add.");
             Thread.currentThread().interrupt();
             return false;
         }
@@ -94,11 +105,13 @@ public class TicketPool {
             String ticket;
             synchronized (this){
                 if (tickets.isEmpty()){
-                    LoggerUtil.info("Ticket pool is empty. Waiting...");
+//                    LoggerUtil.info("Ticket pool is empty. Waiting...");
+                    logger.info("Ticket pool is empty. Waiting...");
                 }
-                ticket = tickets.poll(); // Remove ticket from the queue.
+                ticket = tickets.removeFirst(); // Remove ticket from the queue.
                 if (ticket != null) {
-                    LoggerUtil.info("Ticket removed: " + ticket);
+//                    LoggerUtil.info("Ticket removed: " + ticket);
+                    logger.info("Ticket removed: {}", ticket);
                 }
 
             }
@@ -106,7 +119,8 @@ public class TicketPool {
             spaceAvailable.release();
             return ticket;
         } catch (InterruptedException e){
-            LoggerUtil.error("Thread interrupted while waiting to add tickets.");
+//            LoggerUtil.error("Thread interrupted while waiting to add tickets.");
+            logger.error("Thread interrupted while waiting to add tickets while waiting to remove.");
             Thread.currentThread().interrupt();
             return null;
         }
@@ -120,7 +134,8 @@ public class TicketPool {
      */
     public int getCurrentSize() {
         int size = tickets.size();
-        LoggerUtil.info("Current pool size queried: " + size);
+//        LoggerUtil.info("Current pool size queried: " + size);
+        logger.info("Current pool size queried: {}", size);
         return size;
     }
 

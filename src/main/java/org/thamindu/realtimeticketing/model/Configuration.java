@@ -1,5 +1,7 @@
 package org.thamindu.realtimeticketing.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.thamindu.realtimeticketing.util.LoggerUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +31,8 @@ public class Configuration implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final String CONFIG_FILE = "system_config.json";
 
+    private static final Logger logger = LogManager.getLogger(Configuration.class);
+
     private int totalTickets;
     private int ticketReleaseRate;
     private int customerRetrievalRate;
@@ -56,30 +60,35 @@ public class Configuration implements Serializable {
      */
     public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity){
         if (totalTickets < 0 || ticketReleaseRate < 0 || customerRetrievalRate < 0 || maxTicketCapacity <= 0) {
-            LoggerUtil.error("Invalid configuration parameters.");
+//            LoggerUtil.error("Invalid configuration parameters.");
+            logger.error("Invalid configuration parameters.");
             throw new IllegalArgumentException("Invalid configuration values provided.");
         }
         this.totalTickets = totalTickets;
         this.ticketReleaseRate = ticketReleaseRate;
         this.customerRetrievalRate = customerRetrievalRate;
         this.maxTicketCapacity =maxTicketCapacity;
-        LoggerUtil.info("Configuration initialized with custom values.");
+//        LoggerUtil.info("Configuration initialized with custom values.");
+        logger.info("Configuration initialized with custom values.");
     }
 
     public static Configuration loadConfiguration(){
         File file = new File(CONFIG_FILE);
         if (file.exists()){
             try (Reader reader = new FileReader(file)){
-                    Gson gson = new Gson();
-                    Configuration config = gson.fromJson(reader, Configuration.class);
-                    LoggerUtil.info("Configuration loaded from "+CONFIG_FILE);
-                    return config;
+                Gson gson = new Gson();
+                Configuration config = gson.fromJson(reader, Configuration.class);
+//                LoggerUtil.info("Configuration loaded from "+CONFIG_FILE);
+                logger.info("Configuration loaded from "+CONFIG_FILE);
+                return config;
             } catch (IOException e){
-                LoggerUtil.error("Error loading the configuration: "+e.getMessage());
+//                LoggerUtil.error("Error loading the configuration: "+e.getMessage());
+                logger.error("Error loading the configuration: {}", e.getMessage());
             }
 
         }else {
-            LoggerUtil.warn("Configuration not found. Using the default configuration. ");
+//            LoggerUtil.warn("Configuration not found. Using the default configuration. ");
+            logger.warn("Configuration not found. Using the default configuration. ");
         }
         return new Configuration();
     }
@@ -88,9 +97,11 @@ public class Configuration implements Serializable {
         try (Writer writer = new FileWriter(CONFIG_FILE)){
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(this,writer);
-            LoggerUtil.info("Configuration saved to "+ CONFIG_FILE);
+//            LoggerUtil.info("Configuration saved to "+ CONFIG_FILE);
+            logger.info("Configuration saved to "+ CONFIG_FILE);
         }catch (IOException e){
-            LoggerUtil.error("Error saving the configuration: "+e.getMessage());
+//            LoggerUtil.error("Error saving the configuration: "+e.getMessage());
+            logger.error("Error saving the configuration: {}", e.getMessage());
         }
     }
 
@@ -111,11 +122,13 @@ public class Configuration implements Serializable {
      */
     public void setTotalTickets(int totalTickets) {
         if (totalTickets < 0){
-            LoggerUtil.error("Attempt to set negative totalTickets: " + totalTickets);
+//            LoggerUtil.error("Attempt to set negative totalTickets: " + totalTickets);
+            logger.error("Attempt to set negative totalTickets: {}", totalTickets);
             throw new IllegalArgumentException("Total tickets cannot be negative.");
         }
         this.totalTickets = totalTickets;
-        LoggerUtil.info("Total tickets updated to: " + totalTickets);
+//        LoggerUtil.info("Total tickets updated to: " + totalTickets);
+        logger.info("Total tickets updated to: {}", totalTickets);
     }
 
     /**
@@ -135,11 +148,13 @@ public class Configuration implements Serializable {
      */
     public void setTicketReleaseRate(int ticketReleaseRate) {
         if (ticketReleaseRate < 0){
-            LoggerUtil.error("Attempt to set negative ticketReleaseRate: " + ticketReleaseRate);
+//            LoggerUtil.error("Attempt to set negative ticketReleaseRate: " + ticketReleaseRate);
+            logger.error("Attempt to set negative ticketReleaseRate: {}", ticketReleaseRate);
             throw new IllegalArgumentException("Ticket release rate cannot be negative.");
         }
         this.ticketReleaseRate = ticketReleaseRate;
-        LoggerUtil.info("Ticket release rate updated to: " + ticketReleaseRate);
+//        LoggerUtil.info("Ticket release rate updated to: " + ticketReleaseRate);
+        logger.info("Ticket release rate updated to: {}", ticketReleaseRate);
     }
 
     /**
@@ -159,11 +174,13 @@ public class Configuration implements Serializable {
      */
     public void setCustomerRetrievalRate(int customerRetrievalRate) {
         if (customerRetrievalRate < 0){
-            LoggerUtil.error("Attempt to set negative customerRetrievalRate: " + customerRetrievalRate);
+//            LoggerUtil.error("Attempt to set negative customerRetrievalRate: " + customerRetrievalRate);
+            logger.error("Attempt to set negative customerRetrievalRate: {}", customerRetrievalRate);
             throw new IllegalArgumentException("Customer retrieval rate cannot be negative.");
         }
         this.customerRetrievalRate = customerRetrievalRate;
-        LoggerUtil.info("Customer retrieval rate updated to: " + customerRetrievalRate);
+//        LoggerUtil.info("Customer retrieval rate updated to: " + customerRetrievalRate);
+        logger.info("Customer retrieval rate updated to: {}", customerRetrievalRate);
     }
 
     /**
@@ -183,11 +200,13 @@ public class Configuration implements Serializable {
      */
     public void setMaxTicketCapacity(int maxTicketCapacity) {
         if (maxTicketCapacity <= 0){
-            LoggerUtil.error("Attempt to set non-positive maxTicketCapacity: " + maxTicketCapacity);
+//            LoggerUtil.error("Attempt to set non-positive maxTicketCapacity: " + maxTicketCapacity);
+            logger.error("Attempt to set non-positive maxTicketCapacity: {}", maxTicketCapacity);
             throw new IllegalArgumentException("Maximum ticket capacity must be greater than zero.");
         }
         this.maxTicketCapacity = maxTicketCapacity;
-        LoggerUtil.info("Maximum ticket capacity updated to: " + maxTicketCapacity);
+//        LoggerUtil.info("Maximum ticket capacity updated to: " + maxTicketCapacity);
+        logger.info("Maximum ticket capacity updated to: {}", maxTicketCapacity);
     }
 
     @Override

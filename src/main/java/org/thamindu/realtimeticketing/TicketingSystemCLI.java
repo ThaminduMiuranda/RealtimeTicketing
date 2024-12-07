@@ -1,5 +1,7 @@
 package org.thamindu.realtimeticketing;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.thamindu.realtimeticketing.model.Configuration;
 import org.thamindu.realtimeticketing.model.Customer;
 import org.thamindu.realtimeticketing.model.TicketPool;
@@ -15,6 +17,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TicketingSystemCLI {
+
+    private static final Logger logger = LogManager.getLogger(TicketingSystemCLI.class);
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -49,7 +54,8 @@ public class TicketingSystemCLI {
         List<Vendor> vendors = new ArrayList<>();
         List<Customer> customers = new ArrayList<>();
 
-        LoggerUtil.info(config.toString());
+//        LoggerUtil.info(config.toString());
+        logger.info(config.toString());
 
         for (int i = 0; i < numVendorThreads; i++) {
             String id = Integer.toString(i);
@@ -74,7 +80,8 @@ public class TicketingSystemCLI {
             try {
                 Thread.sleep(1000);
             }catch (InterruptedException e){
-                LoggerUtil.error("com.W2051890.ticketing_system.Main thread interrupted.");
+//                LoggerUtil.error("com.W2051890.ticketing_system.Main thread interrupted.");
+                logger.error("com.W2051890.ticketing_system.Main thread interrupted.");
                 Thread.currentThread().interrupt();
                 break;
             }
@@ -85,7 +92,8 @@ public class TicketingSystemCLI {
 
         executorService.shutdown();
 
-        LoggerUtil.info("Simulation complete. All tickets added and sold.");
+//        LoggerUtil.info("Simulation complete. All tickets added and sold.");
+        logger.info("Simulation complete. All tickets added and sold.");
     }
 
 

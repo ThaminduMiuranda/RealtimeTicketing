@@ -1,5 +1,7 @@
 package org.thamindu.realtimeticketing.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.thamindu.realtimeticketing.util.LoggerUtil;
 
 import java.util.Scanner;
@@ -7,6 +9,8 @@ import java.util.Scanner;
 public class InputService {
 
     private final Scanner scanner;
+
+    private static final Logger logger = LogManager.getLogger(InputService.class);
 
     public InputService(Scanner scanner){
         this.scanner = scanner;
@@ -21,10 +25,12 @@ public class InputService {
                 if (input >= min && input <= max){
                     return input;
                 }else {
-                    LoggerUtil.warn("Input must be between "+min+" and "+max+".");
+//                    LoggerUtil.warn("Input must be between "+min+" and "+max+".");
+                    logger.warn("Input must be between {} and {}.", min, max);
                 }
             }catch (NumberFormatException e){
-                LoggerUtil.error("Invalid input. Please enter a valid integer.");
+//                LoggerUtil.error("Invalid input. Please enter a valid integer.");
+                logger.error("Invalid input. Please enter a valid integer.");
             }
         }
     }
