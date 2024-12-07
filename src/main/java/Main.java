@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
@@ -39,9 +38,10 @@ public class Main {
         }
 
         TicketPool ticketPool = new TicketPool(config.getMaxTicketCapacity(), config.getTotalTickets());
-        int numVendorThreads = Math.floorDiv(config.getTotalTickets(), config.getTicketReleaseRate());
-        int numCustomerThreads = Math.floorDiv(config.getTotalTickets(), config.getCustomerRetrievalRate());
+        int numVendorThreads = Math.max(1,config.getTotalTickets()/config.getTicketReleaseRate());
+        int numCustomerThreads = Math.max(1, config.getTotalTickets()/config.getCustomerRetrievalRate());
         ExecutorService executorService = Executors.newFixedThreadPool(numVendorThreads + numCustomerThreads);
+        int retrievalInterval = 1000;
 
         List<Vendor> vendors = new ArrayList<>();
         List<Customer> customers = new ArrayList<>();
@@ -62,7 +62,7 @@ public class Main {
 
         for (int i = 0; i < numCustomerThreads; i++) {
             String id = Integer.toString(i);
-            Customer customer = new Customer("Customer-"+id, config.getCustomerRetrievalRate(), 1000,ticketPool);
+            Customer customer = new Customer("Customer-"+id, config.getCustomerRetrievalRate(), retrievalInterval,ticketPool);
             customers.add(customer);
             executorService.submit(customer);
         }
@@ -77,32 +77,12 @@ public class Main {
             }
         }
 
-//        try {
-//            Thread.sleep(10000);
-//        } catch (InterruptedException e) {
-//            LoggerUtil.error("Main thread interrupted during sleep: " + e.getMessage());
-//            Thread.currentThread().interrupt();
-//        }
-
         vendors.forEach(Vendor::stop);
         customers.forEach(Customer::stop);
 
         executorService.shutdown();
 
         LoggerUtil.info("Simulation complete. All tickets added and sold.");
-
-//        try {
-//            if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-//                System.out.println("Forcing shutdown as tasks did not finish in time...");
-//                executorService.shutdownNow();
-//            } else {
-//                System.out.println("All vendor threads completed successfully.");
-//            }
-//        } catch (InterruptedException e) {
-//            System.err.println("Shutdown interrupted: " + e.getMessage());
-//            executorService.shutdownNow();
-//            Thread.currentThread().interrupt();
-//        }
     }
 
 
