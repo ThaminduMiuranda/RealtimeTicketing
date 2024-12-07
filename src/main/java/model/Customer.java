@@ -43,18 +43,14 @@ public class Customer implements Runnable{
     public void run() {
         LoggerUtil.info("Customer "+customerId+" started.");
         while (isRunning){
-//            if(!ticketPool.isSimulationComplete()){
-//                isRunning = false;
-//            }
             try {
                 for (int i = 0; i < ticketRetrievalRate; i++) {
-                    try {
                         String ticket = ticketPool.removeTicket();
+                        if (ticket == null){
+                            stop();
+                            break;
+                        }
                         LoggerUtil.info("Customer " + customerId + " retrieved ticket: " + ticket);
-                    } catch (IllegalStateException e) {
-                        LoggerUtil.warn("Customer " + customerId + ": " + e.getMessage());
-                        break;
-                    }
                 }
                 Thread.sleep(retrievalInterval);
             } catch (InterruptedException e){
