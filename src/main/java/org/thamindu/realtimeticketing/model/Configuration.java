@@ -29,7 +29,7 @@ public class Configuration implements Serializable {
      */
     @Serial
     private static final long serialVersionUID = 1L;
-    private static final String CONFIG_FILE = "system_config.json";
+    private static final String CONFIG_FILE = "src/main/resources/system_config.json";
 
     private static final Logger logger = LogManager.getLogger(Configuration.class);
 
@@ -79,7 +79,7 @@ public class Configuration implements Serializable {
                 Gson gson = new Gson();
                 Configuration config = gson.fromJson(reader, Configuration.class);
 //                LoggerUtil.info("Configuration loaded from "+CONFIG_FILE);
-                logger.info("Configuration loaded from "+CONFIG_FILE);
+                logger.info("Configuration loaded from {}",CONFIG_FILE);
                 return config;
             } catch (IOException e){
 //                LoggerUtil.error("Error loading the configuration: "+e.getMessage());
@@ -98,7 +98,7 @@ public class Configuration implements Serializable {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(this,writer);
 //            LoggerUtil.info("Configuration saved to "+ CONFIG_FILE);
-            logger.info("Configuration saved to "+ CONFIG_FILE);
+            logger.info("Configuration saved to {}", CONFIG_FILE);
         }catch (IOException e){
 //            LoggerUtil.error("Error saving the configuration: "+e.getMessage());
             logger.error("Error saving the configuration: {}", e.getMessage());
