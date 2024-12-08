@@ -12,11 +12,17 @@ export class ConfigurationService {
 
   constructor(private http: HttpClient) {}
 
-  saveConfiguration(config: Configuration): Observable<any> {
-    return this.http.post(this.apiUrl, config,{ responseType: 'text' });
-  }
-
+  /**
+   * Fetches the current configuration from the backend
+   * @return Observable containing the configuration json object.
+   */
   getConfiguration(): Observable<Configuration> {
     return this.http.get<Configuration>(this.apiUrl);
+  }
+  /**
+   * Saves the configuration to the backend
+   */
+  saveConfiguration(configuration: any): Observable<Configuration> {
+    return this.http.post<Configuration>(this.apiUrl, configuration);
   }
 }

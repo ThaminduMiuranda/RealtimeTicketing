@@ -1,19 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import {provideHttpClient} from '@angular/common/http';
-import {ConfigurationFormComponent} from './app/components/configuration-form/configuration-form.component';
-import {provideRouter, Routes} from '@angular/router';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import {appConfig} from './app/app.config';
 
-const routes: Routes = [
-  { path: '', component: ConfigurationFormComponent },
-  { path: 'configuration', component: ConfigurationFormComponent },
-];
-
-bootstrapApplication(AppComponent, {
-  providers:[
-    provideRouter(routes),
-    provideHttpClient(), provideAnimationsAsync()
-  ]
-})
+bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
