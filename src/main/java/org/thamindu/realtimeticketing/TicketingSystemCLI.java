@@ -7,9 +7,10 @@ import org.thamindu.realtimeticketing.model.Customer;
 import org.thamindu.realtimeticketing.model.TicketPool;
 import org.thamindu.realtimeticketing.model.Vendor;
 import org.thamindu.realtimeticketing.service.InputService;
-import org.thamindu.realtimeticketing.util.LoggerUtil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,7 +21,7 @@ public class TicketingSystemCLI {
 
     private static final Logger logger = LogManager.getLogger(TicketingSystemCLI.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
 
         Configuration config = Configuration.loadConfiguration();
@@ -92,8 +93,11 @@ public class TicketingSystemCLI {
 
         executorService.shutdown();
 
+        if (executorService.isShutdown()){
+            logger.info("Simulation complete. All tickets added and sold.");
+        }
+
 //        LoggerUtil.info("Simulation complete. All tickets added and sold.");
-        logger.info("Simulation complete. All tickets added and sold.");
     }
 
 

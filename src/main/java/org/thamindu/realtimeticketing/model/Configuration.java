@@ -2,6 +2,8 @@ package org.thamindu.realtimeticketing.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.thamindu.realtimeticketing.util.LoggerUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +23,7 @@ import java.io.*;
  *
  * @author Thamindu Miuranda Hemachandra
  */
+
 public class Configuration implements Serializable {
 
     /**
@@ -29,7 +32,9 @@ public class Configuration implements Serializable {
      */
     @Serial
     private static final long serialVersionUID = 1L;
-    private static final String CONFIG_FILE = "src/main/resources/system_config.json";
+    private static final String DEFAULT_CONFIG_FILE = "config/system_config.json";
+    private static final String CONFIG_FILE = System.getProperty("config.file.path", DEFAULT_CONFIG_FILE);
+
 
     private static final Logger logger = LogManager.getLogger(Configuration.class);
 
@@ -59,154 +64,70 @@ public class Configuration implements Serializable {
      * @param maxTicketCapacity Maximum capacity of tickets in the pool.
      */
     public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity){
-        if (totalTickets < 0 || ticketReleaseRate < 0 || customerRetrievalRate < 0 || maxTicketCapacity <= 0) {
-//            LoggerUtil.error("Invalid configuration parameters.");
-            logger.error("Invalid configuration parameters.");
-            throw new IllegalArgumentException("Invalid configuration values provided.");
-        }
         this.totalTickets = totalTickets;
         this.ticketReleaseRate = ticketReleaseRate;
         this.customerRetrievalRate = customerRetrievalRate;
         this.maxTicketCapacity =maxTicketCapacity;
-//        LoggerUtil.info("Configuration initialized with custom values.");
         logger.info("Configuration initialized with custom values.");
     }
 
-    public static Configuration loadConfiguration(){
+    public static Configuration loadConfiguration() throws IOException {
         File file = new File(CONFIG_FILE);
         if (file.exists()){
             try (Reader reader = new FileReader(file)){
                 Gson gson = new Gson();
                 Configuration config = gson.fromJson(reader, Configuration.class);
-//                LoggerUtil.info("Configuration loaded from "+CONFIG_FILE);
                 logger.info("Configuration loaded from {}",CONFIG_FILE);
                 return config;
-            } catch (IOException e){
-//                LoggerUtil.error("Error loading the configuration: "+e.getMessage());
-                logger.error("Error loading the configuration: {}", e.getMessage());
             }
-
-        }else {
-//            LoggerUtil.warn("Configuration not found. Using the default configuration. ");
+        } else {
             logger.warn("Configuration not found. Using the default configuration. ");
+            Configuration defaultConfig = new Configuration();
+            defaultConfig.saveConfiguration();
+            return defaultConfig;
         }
-        return new Configuration();
     }
 
     public void saveConfiguration(){
         try (Writer writer = new FileWriter(CONFIG_FILE)){
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(this,writer);
-//            LoggerUtil.info("Configuration saved to "+ CONFIG_FILE);
             logger.info("Configuration saved to {}", CONFIG_FILE);
         }catch (IOException e){
-//            LoggerUtil.error("Error saving the configuration: "+e.getMessage());
             logger.error("Error saving the configuration: {}", e.getMessage());
         }
     }
 
-    /**
-     * Gets the total number of tickets in the system.
-     *
-     * @return the total number of tickets.
-     */
     public int getTotalTickets() {
         return totalTickets;
     }
 
-    /**
-     * Sets the total number ot tickets in the system.
-     *
-     * @param totalTickets the total number of tickets.
-     * @throws IllegalArgumentException if the value is negative.
-     */
     public void setTotalTickets(int totalTickets) {
-        if (totalTickets < 0){
-//            LoggerUtil.error("Attempt to set negative totalTickets: " + totalTickets);
-            logger.error("Attempt to set negative totalTickets: {}", totalTickets);
-            throw new IllegalArgumentException("Total tickets cannot be negative.");
-        }
         this.totalTickets = totalTickets;
-//        LoggerUtil.info("Total tickets updated to: " + totalTickets);
-        logger.info("Total tickets updated to: {}", totalTickets);
     }
 
-    /**
-     * Gets the rate at which the tickets are released by the vendors.
-     *
-     * @return the ticket release rate
-     */
     public int getTicketReleaseRate() {
         return ticketReleaseRate;
     }
 
-    /**
-     * Set the rate at which the tickets are released by the vendors.
-     *
-     * @param ticketReleaseRate the ticket release rate.
-     * @throws IllegalArgumentException if the value it negative.
-     */
     public void setTicketReleaseRate(int ticketReleaseRate) {
-        if (ticketReleaseRate < 0){
-//            LoggerUtil.error("Attempt to set negative ticketReleaseRate: " + ticketReleaseRate);
-            logger.error("Attempt to set negative ticketReleaseRate: {}", ticketReleaseRate);
-            throw new IllegalArgumentException("Ticket release rate cannot be negative.");
-        }
         this.ticketReleaseRate = ticketReleaseRate;
-//        LoggerUtil.info("Ticket release rate updated to: " + ticketReleaseRate);
-        logger.info("Ticket release rate updated to: {}", ticketReleaseRate);
     }
 
-    /**
-     * Gets the rate at which the customer attempt to retrieve tickets.
-     *
-     * @return the customer retrieval rate
-     */
     public int getCustomerRetrievalRate() {
         return customerRetrievalRate;
     }
 
-    /**
-     * Gets the rate at which the customer attempts to retrieve tickets.
-     *
-     * @param customerRetrievalRate the customer retrieval rate
-     * @throws IllegalArgumentException if the value is negative.
-     */
     public void setCustomerRetrievalRate(int customerRetrievalRate) {
-        if (customerRetrievalRate < 0){
-//            LoggerUtil.error("Attempt to set negative customerRetrievalRate: " + customerRetrievalRate);
-            logger.error("Attempt to set negative customerRetrievalRate: {}", customerRetrievalRate);
-            throw new IllegalArgumentException("Customer retrieval rate cannot be negative.");
-        }
         this.customerRetrievalRate = customerRetrievalRate;
-//        LoggerUtil.info("Customer retrieval rate updated to: " + customerRetrievalRate);
-        logger.info("Customer retrieval rate updated to: {}", customerRetrievalRate);
     }
 
-    /**
-     * Gets the maximum capacity of tickets in the pool.
-     *
-     * @return the maximum ticket capacity.
-     */
     public int getMaxTicketCapacity() {
         return maxTicketCapacity;
     }
 
-    /**
-     * Sets the maximum capacity of tickets in the pool.
-     *
-     * @param maxTicketCapacity the maximum ticket capacity.
-     * @throws IllegalArgumentException if the value is negative or zero.
-     */
     public void setMaxTicketCapacity(int maxTicketCapacity) {
-        if (maxTicketCapacity <= 0){
-//            LoggerUtil.error("Attempt to set non-positive maxTicketCapacity: " + maxTicketCapacity);
-            logger.error("Attempt to set non-positive maxTicketCapacity: {}", maxTicketCapacity);
-            throw new IllegalArgumentException("Maximum ticket capacity must be greater than zero.");
-        }
         this.maxTicketCapacity = maxTicketCapacity;
-//        LoggerUtil.info("Maximum ticket capacity updated to: " + maxTicketCapacity);
-        logger.info("Maximum ticket capacity updated to: {}", maxTicketCapacity);
     }
 
     @Override

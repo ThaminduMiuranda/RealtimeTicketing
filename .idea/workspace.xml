@@ -4,9 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aae870ae-89ab-496e-9848-0cce17ea162f" name="Changes" comment="feat: Created services for log and ticket">
-      <change afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/environments/environment.development.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/environments/environment.ts" afterDir="false" />
+    <list default="true" id="aae870ae-89ab-496e-9848-0cce17ea162f" name="Changes" comment="chore: workspace.xml update">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/thamindu/realtimeticketing/config/CorsConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/system_config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/app.config.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/app.config.server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/components/configuration-form/configuration-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/components/configuration-form/configuration-form.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/components/configuration-form/configuration-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/components/configuration-form/configuration-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/models/configuration.model.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/services/configuration.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/app/services/configuration.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ticketingFrontend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ticketingFrontend/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/thamindu/realtimeticketing/TicketingSystemCLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/thamindu/realtimeticketing/TicketingSystemCLI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/thamindu/realtimeticketing/controller/ConfigurationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/thamindu/realtimeticketing/controller/ConfigurationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/thamindu/realtimeticketing/model/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/thamindu/realtimeticketing/model/Configuration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +32,8 @@
       <list>
         <option value="JUnit5 Test Class" />
         <option value="AnnotationType" />
-        <option value="Class" />
         <option value="TypeScript File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -43,6 +57,20 @@
     &quot;accountId&quot;: &quot;b0189ac3-85da-4037-be99-74ccd24fbdda&quot;
   }
 }</component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -56,8 +84,14 @@
   "keyToString": {
     "Application.Main.executor": "Run",
     "Application.TicketingSystemCLI.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "HTTP Request.generated-requests | #2.executor": "Run",
+    "HTTP Request.generated-requests | #4.executor": "Run",
     "JUnit.All in RealtimeTicketingSystem_backend.executor": "Debug",
     "Maven.RealTimeTicketing [clean,install].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -78,7 +112,7 @@
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.3413793",
+    "project.structure.side.proportion": "0.5578544",
     "settings.editor.selected.configurable": "MavenSettings",
     "ts.external.directory.path": "D:\\IIT\\CourseWork\\RealtimeTicketing\\frontend\\ticketingFrontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
@@ -98,6 +132,7 @@
       <recent name="" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\IIT\CourseWork\RealtimeTicketing" />
       <recent name="D:\IIT\CourseWork\RealtimeTicketing\frontend\ticketingFrontend\src\app\models" />
       <recent name="D:\IIT\2nd year\OOP\RealtimeTicketingSystem\backend" />
     </key>
@@ -107,6 +142,9 @@
     <key name="CreateTestDialog.RecentsKey">
       <recent name="" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.thamindu.realtimeticketing.config" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.TicketingSystemCLI">
     <configuration name="TicketingSystemCLI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -114,6 +152,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="org.thamindu.realtimeticketing.TicketingSystemCLI" />
       <module name="RealtimeTicketing_backend" />
+      <option name="VM_PARAMETERS" value="-Dconfig.file.path=D:\IIT\CourseWork\RealtimeTicketing\system_config.json" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.thamindu.realtimeticketing.*" />
@@ -123,6 +162,12 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="generated-requests | #2" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#2" index="2" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#4" index="4" runType="Run single request">
+      <method v="2" />
     </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="RealTimeTicketing" />
@@ -141,13 +186,22 @@
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="RealtimeTicketing_backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="org.thamindu.realtimeticketing.RealtimeTicketingApplication" />
+      <option name="VM_PARAMETERS" value="-Dconfig.file.path=D:\IIT\CourseWork\RealtimeTicketing\system_config.json" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.TicketingSystemCLI" />
+      <item itemvalue="HTTP Request.generated-requests | #4" />
+      <item itemvalue="HTTP Request.generated-requests | #2" />
+      <item itemvalue="Spring Boot.RealtimeTicketingApplication" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.TicketingSystemCLI" />
+        <item itemvalue="HTTP Request.generated-requests | #4" />
+        <item itemvalue="HTTP Request.generated-requests | #2" />
       </list>
     </recent_temporary>
   </component>
@@ -176,7 +230,7 @@
       <workItem from="1733577806290" duration="205000" />
       <workItem from="1733578067385" duration="479000" />
       <workItem from="1733584756867" duration="6000" />
-      <workItem from="1733587608815" duration="22414000" />
+      <workItem from="1733587608815" duration="47636000" />
     </task>
     <task id="LOCAL-00001" summary="refactor: Changed the structure of the project">
       <option name="closed" value="true" />
@@ -322,11 +376,38 @@
       <option name="project" value="LOCAL" />
       <updated>1733640805528</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="refactor: Created environmental">
+      <option name="closed" value="true" />
+      <created>1733640876351</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1733640876351</updated>
+    </task>
+    <task id="LOCAL-00020" summary="chore: workspace.xml update">
+      <option name="closed" value="true" />
+      <created>1733640911940</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1733640911940</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="refactor: Changed the structure of the project" />
@@ -347,7 +428,9 @@
     <MESSAGE value="Refactor: Changed file path of system_config.json" />
     <MESSAGE value="feat: Created models and services for configuration" />
     <MESSAGE value="feat: Created services for log and ticket" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Created services for log and ticket" />
+    <MESSAGE value="refactor: Created environmental" />
+    <MESSAGE value="chore: workspace.xml update" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: workspace.xml update" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

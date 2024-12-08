@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/system_config.json
+/system.log
