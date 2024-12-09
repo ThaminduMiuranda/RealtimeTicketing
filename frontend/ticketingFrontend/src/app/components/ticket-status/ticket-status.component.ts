@@ -10,7 +10,6 @@ export class TicketStatusComponent implements OnInit {
   totalTickets: number = 0;
   ticketsSold: number = 0;
   ticketsAvailable: number = 0;
-  ticketsInProcess: number = 0;
 
   constructor() {}
 
@@ -19,6 +18,5 @@ export class TicketStatusComponent implements OnInit {
     this.totalTickets = 100; // Example value
     this.ticketsSold = 30; // Example value
     this.ticketsAvailable = this.totalTickets - this.ticketsSold;
-    this.ticketsInProcess = 5; // Example value
   }
 }

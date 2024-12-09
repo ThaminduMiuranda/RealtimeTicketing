@@ -2,7 +2,6 @@
   <h2>Control Panel</h2>
   <div class="buttons">
     <button (click)="startSimulation()" class="btn btn-success" [disabled]="isRunning">Start Simulation</button>
-    <button (click)="pauseSimulation()" class="btn btn-warning" [disabled]="!isRunning">Pause Simulation</button>
     <button (click)="stopSimulation()" class="btn btn-danger" [disabled]="!isRunning">Stop Simulation</button>
   </div>
 </div>

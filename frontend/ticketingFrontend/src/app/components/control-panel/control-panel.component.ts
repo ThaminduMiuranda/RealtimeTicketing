@@ -20,13 +20,6 @@ export class ControlPanelComponent {
     }
   }
 
-  pauseSimulation(){
-    if (this.isRunning){
-      console.log("Simulation paused.");
-      //logic
-    }
-  }
-
   stopSimulation(){
     if (this.isRunning){
       console.log("Simulation is stopped.");
