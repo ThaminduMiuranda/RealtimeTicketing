@@ -1,8 +1,10 @@
 // src/app/services/web-socket.service.ts
 
 import { Injectable } from '@angular/core';
+// @ts-ignore
 import SockJS from 'sockjs-client';
 import { Observable, Subject } from 'rxjs';
+// @ts-ignore
 import {Client, IMessage, StompSubscription} from '@stomp/stompjs';
 
 @Injectable({
@@ -19,7 +21,7 @@ export class WebSocketService {
         // 'login': 'user',
         // 'passcode': 'password',
       },
-      debug: function (str) {
+      debug: function (str: any) {
         console.log(str);
       },
       reconnectDelay: 5000,
@@ -35,7 +37,7 @@ export class WebSocketService {
       });
     };
 
-    this.client.onStompError = (frame) => {
+    this.client.onStompError = (frame: { headers: { [x: string]: string; }; body: string; }) => {
       console.error('Broker reported error: ' + frame.headers['message']);
       console.error('Additional details: ' + frame.body);
     };
