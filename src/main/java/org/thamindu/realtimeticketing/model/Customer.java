@@ -54,7 +54,7 @@ public class Customer implements Runnable{
                 for (int i = 0; i < ticketRetrievalRate; i++) {
                     String ticket = ticketPool.removeTicket();
                     if (ticket == null){
-                        stop();
+//                        stop();
                         break;
                     }
 //                    LoggerUtil.info("Customer " + customerId + " retrieved ticket: " + ticket);
