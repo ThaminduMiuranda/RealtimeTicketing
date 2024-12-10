@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class TicketingSystemCLI {
 
@@ -91,11 +92,24 @@ public class TicketingSystemCLI {
         vendors.forEach(Vendor::stop);
         customers.forEach(Customer::stop);
 
-        executorService.shutdown();
+//        executorService.shutdown();
 
-        if (executorService.isShutdown()){
-            logger.info("Simulation complete. All tickets added and sold.");
+        try {
+            if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+                if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+                    logger.error("Executor service did not terminate");
+                }
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
         }
+
+//        if (executorService.isShutdown()){
+//
+//        }
+            logger.info("Simulation complete. All tickets added and sold.");
 
 //        LoggerUtil.info("Simulation complete. All tickets added and sold.");
     }
