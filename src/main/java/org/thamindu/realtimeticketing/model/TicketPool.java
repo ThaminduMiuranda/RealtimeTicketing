@@ -2,15 +2,14 @@ package org.thamindu.realtimeticketing.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.thamindu.realtimeticketing.util.LoggerUtil;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -23,20 +22,33 @@ import java.util.concurrent.Semaphore;
  *
  */
 @Component
+@Scope("singleton")
 public class TicketPool {
 
     private static final Logger logger = LogManager.getLogger(TicketPool.class);
 
-    private final List<String> tickets;
-    @Value("${ticket.pool.maxCapacity:50}")
-    private final int maxCapacity;
-    private final Semaphore ticketsAvailable;
-    private final Semaphore spaceAvailable;
+    private List<String> tickets;
 
     @Value("${ticket.pool.totalTickets:100}")
-    private final int totalTickets;
+    private int totalTickets;
     private int ticketsAdded = 0;
     private int ticketsSold = 0;
+    private int availableTickets = totalTickets;
+
+
+    @Value("${ticket.pool.maxCapacity:50}")
+    private int maxCapacity;
+    private Semaphore ticketsAvailable;
+    private Semaphore spaceAvailable;
+
+
+    private volatile boolean isStopped = false;
+
+    public void stopSimulation(){
+        isStopped = true;
+    }
+
+    private static TicketPool instance;
 
     /**
      * Constructs a {@code TicketPool} with a specific maximum capacity
@@ -44,9 +56,9 @@ public class TicketPool {
      * @param maxCapacity the maximum number of tickets that can be held in the pool.
      * @throws IllegalArgumentException if the maximum capacity is less than or equal to zero.
      */
+    @Autowired
     public TicketPool(@Value("${ticket.pool.maxCapacity:50}") int maxCapacity, @Value("${ticket.pool.totalTickets:100}") int totalTickets){
         if (maxCapacity <= 0) {
-//            LoggerUtil.error("Invalid maximum capacity: " + maxCapacity);
             logger.error("Invalid maximum capacity: {}", maxCapacity);
             throw new IllegalArgumentException("Max capacity must be greater than zero.");
         }
@@ -55,7 +67,10 @@ public class TicketPool {
         this.totalTickets = totalTickets;
         this.ticketsAvailable = new Semaphore(0); //initially no tickets available
         this.spaceAvailable = new Semaphore(maxCapacity); //initially, all space is available
+        logger.info("TicketPool instance created");
     }
+
+
 
     /**
      * Adds tickets to the pool.
@@ -69,25 +84,26 @@ public class TicketPool {
             spaceAvailable.acquire();
 
             synchronized (this){
+                if (isStopped) return false;
                 if (ticketsAdded >= totalTickets){
                     spaceAvailable.release(); // Release the permit back
                     return true;
                 }
                 if (tickets.size() >= maxCapacity){
-//                    LoggerUtil.info("Max capacity reached. Waiting...");
                     logger.info("Max capacity reached. Waiting...");
                     return false;
                 }
                 String ticketId = ticketBase + "-" + ticketsAdded;
                 tickets.add(ticketId);
                 ticketsAdded++;
-//                LoggerUtil.info("Ticket added: "+ticketId+" (Total added: "+ ticketsAdded+")");
                 logger.info("Ticket added: {} (Total added: {})", ticketId, ticketsAdded);
             }
             ticketsAvailable.release();
+            if (!isStopped){
+                Thread.sleep(1000);
+            }
             return true;
         } catch (InterruptedException e){
-//            LoggerUtil.error("Thread interrupted while waiting to add tickets.");
             logger.error("Thread interrupted while waiting to add tickets while waiting to add.");
             Thread.currentThread().interrupt();
             return false;
@@ -105,17 +121,22 @@ public class TicketPool {
             //waits for space become available.
             ticketsAvailable.acquire();
 
+            if (isStopped) return null;
+
             if (ticketsAdded >= totalTickets){
                 ticketsAvailable.release(); // Release the permit back
             }
             String ticket;
             synchronized (this){
                 if (tickets.isEmpty()){
-//                    LoggerUtil.info("Ticket pool is empty. Waiting...");
                     logger.info("Ticket pool is empty. Waiting...");
                 }
                 ticket = tickets.removeFirst(); // Remove ticket from the queue.
                 ticketsSold++;
+
+                if (availableTickets > 0){
+                    availableTickets --;
+                }
                 if (ticket != null) {
 //                    LoggerUtil.info("Ticket removed: " + ticket);
                     logger.info("Ticket removed: {}", ticket);
@@ -124,9 +145,11 @@ public class TicketPool {
             }
             //Signals that space is now available
             spaceAvailable.release();
+            if (!isStopped){
+                Thread.sleep(1000);
+            }
             return ticket;
         } catch (InterruptedException e){
-//            LoggerUtil.error("Thread interrupted while waiting to add tickets.");
             logger.error("Thread interrupted while waiting to add tickets while waiting to remove.");
             Thread.currentThread().interrupt();
             return null;
@@ -142,6 +165,14 @@ public class TicketPool {
         return ticketsSold; // Return the number of tickets sold
     }
 
+    public int getAvailableTickets() {
+        return availableTickets;
+    }
+
+    public void setAvailableTickets(int availableTickets) {
+        this.availableTickets = availableTickets;
+    }
+
     public int getTicketsAdded() {
         return ticketsAdded;
     }
@@ -153,8 +184,7 @@ public class TicketPool {
      */
     public int getCurrentSize() {
         int size = tickets.size();
-//        LoggerUtil.info("Current pool size queried: " + size);
-        logger.info("Current pool size queried: {}", size);
+//        logger.info("Current pool size queried: {}", size);
         return size;
     }
 
@@ -182,5 +212,16 @@ public class TicketPool {
     }
 
 
-
+    public void initialize(int maxCapacity, int totalTickets) {
+        this.maxCapacity = maxCapacity;
+        this.totalTickets = totalTickets;
+        this.tickets.clear();
+        this.ticketsAdded = 0;
+        this.ticketsSold = 0;
+        this.availableTickets = totalTickets;
+        this.ticketsAvailable = new Semaphore(0);
+        this.spaceAvailable = new Semaphore(maxCapacity);
+        this.isStopped = false;
+        logger.info("TicketPool reinitialized: Max Capacity = {}, Total Tickets = {}", maxCapacity, totalTickets);
+    }
 }

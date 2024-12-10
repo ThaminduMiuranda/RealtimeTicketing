@@ -2,18 +2,18 @@
 
 package org.thamindu.realtimeticketing.service;
 
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.thamindu.realtimeticketing.model.Configuration;
 import org.thamindu.realtimeticketing.model.Customer;
 import org.thamindu.realtimeticketing.model.TicketPool;
 import org.thamindu.realtimeticketing.model.Vendor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,15 +23,20 @@ public class SimulationService {
 
     private static final Logger logger = LogManager.getLogger(SimulationService.class);
 
+//    @Autowired
+    private TicketPool ticketPool;
+
     private ExecutorService executorService;
     private List<Vendor> vendors;
     private List<Customer> customers;
     private volatile boolean isRunning = false;
 
-    private final SimpMessagingTemplate messagingTemplate;
+//    private final SimpMessagingTemplate messagingTemplate;
 
-    public SimulationService(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    @Autowired
+    public SimulationService( TicketPool ticketPool) {
+//        this.messagingTemplate = messagingTemplate;
+        this.ticketPool = ticketPool;
     }
 
     public void startSimulation(Configuration config) {
@@ -40,9 +45,9 @@ public class SimulationService {
             return;
         }
         isRunning = true;
-        messagingTemplate.convertAndSend("/topic/simulation", "started");
+//        messagingTemplate.convertAndSend("/topic/simulation", "started");
 
-        TicketPool ticketPool = new TicketPool(config.getMaxTicketCapacity(), config.getTotalTickets());
+        ticketPool.initialize(config.getMaxTicketCapacity(), config.getTotalTickets());
         int numVendorThreads = Math.max(1, config.getTotalTickets() / config.getTicketReleaseRate());
         int numCustomerThreads = Math.max(1, config.getTotalTickets() / config.getCustomerRetrievalRate());
         executorService = Executors.newFixedThreadPool(numVendorThreads + numCustomerThreads);
@@ -61,8 +66,8 @@ public class SimulationService {
             customers.add(customer);
             executorService.submit(customer);
         }
-
-        logger.info("Simulation started with configuration: {}", config);
+//        logger.info("TicketPool instance in SimulationService: {}", ticketPool.hashCode());
+//        logger.info("Simulation started with configuration: {}", config);
     }
 
     public void stopSimulation() {
@@ -71,7 +76,7 @@ public class SimulationService {
             return;
         }
         isRunning = false;
-        messagingTemplate.convertAndSend("/topic/simulation", "stopped");
+//        messagingTemplate.convertAndSend("/topic/simulation", "stopped");
 
         for (Vendor vendor : vendors) {
             vendor.stop();
@@ -79,7 +84,20 @@ public class SimulationService {
         for (Customer customer : customers) {
             customer.stop();
         }
+
+        ticketPool.stopSimulation();
         executorService.shutdown();
+
+        try {
+            if (!executorService.awaitTermination(2, TimeUnit.SECONDS)){
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e){
+            logger.error("Error while shutting down executor service.",e);
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
         logger.info("Simulation stopped.");
     }
 
