@@ -1,30 +1,20 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface TicketStatus {
-  totalTickets: number;
-  ticketsSold: number;
-  ticketsAvailable: number;
-  ticketsInProcess: number;
-}
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TicketService {
-  constructor() {}
+  private apiBase = 'http://localhost:8080/api/tickets'; // Update with your backend URL
 
-  getTicketStatus(): Observable<TicketStatus> {
-    // Replace with actual HTTP request
-    return new Observable<TicketStatus>((observer) => {
-      const status: TicketStatus = {
-        totalTickets: 100,
-        ticketsSold: 30,
-        ticketsAvailable: 70,
-        ticketsInProcess: 5
-      };
-      observer.next(status);
-      observer.complete();
-    });
+  constructor(private http: HttpClient) {}
+
+  getTicketStatus(): Observable<{ totalTickets: number; ticketsSold: number; ticketsAvailable: number }> {
+    return this.http.get<{
+      totalTickets: number;
+      ticketsSold: number;
+      ticketsAvailable: number
+    }>(`${this.apiBase}/status`);
   }
 }
