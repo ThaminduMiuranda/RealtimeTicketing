@@ -4,9 +4,7 @@
     <div *ngIf="logs.length === 0" class="no-logs">No logs available.</div>
     <ul *ngIf="logs.length > 0">
       <li *ngFor="let log of logs" class="log-item">
-        <span class="timestamp">{{ log.timestamp }}</span>
-        <span class="level" [ngClass]="log.level">{{ log.level }}</span>
-        <span class="message">{{ log.message }}</span>
+        <span class="log-message">{{ log }}</span>
       </li>
     </ul>
   </div>
