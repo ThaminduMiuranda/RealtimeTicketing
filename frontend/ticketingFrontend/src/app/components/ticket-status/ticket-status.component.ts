@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {interval, Subscription, switchMap} from 'rxjs';
+import {TicketService} from '../../services/ticket.service';
 
 @Component({
   selector: 'app-ticket-status',
@@ -6,17 +8,46 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ticket-status.component.scss'],
   standalone: true
 })
-export class TicketStatusComponent implements OnInit {
-  totalTickets: number = 0;
-  ticketsSold: number = 0;
-  ticketsAvailable: number = 0;
+export class TicketStatusComponent implements OnInit, OnDestroy {
+  totalTickets: number | null = null;
+  ticketsSold: number | null = null;
+  ticketsAvailable: number | null = null;
 
-  constructor() {}
+  private statusSubscription: Subscription | undefined;
+
+  constructor(private ticketService: TicketService) {}
 
   ngOnInit(): void {
-    // Fetch ticket status data (replace with actual data retrieval logic)
-    this.totalTickets = 100; // Example value
-    this.ticketsSold = 30; // Example value
-    this.ticketsAvailable = this.totalTickets - this.ticketsSold;
+    // this.statusSubscription = interval(1000)
+    //   .pipe(switchMap(()=>this.ticketService.getTicketStatus()))
+    //   .subscribe({
+    //     next: (status) =>{
+    //       this.totalTickets = status.totalTickets;
+    //       this.ticketsSold = status.ticketsSold;
+    //       this.ticketsAvailable = status.ticketsAvailable;
+    //     },
+    //     error: (err) => {
+    //       console.error('Error fetching ticket status:', err);
+    //     },
+    //   })
+    this.fetchTicketStatus();
+  }
+
+  fetchTicketStatus() {
+    this.ticketService.getTicketStatus().subscribe({
+      next: (status) => {
+        this.totalTickets = status.totalTickets;
+        this.ticketsSold = status.ticketsSold;
+        this.ticketsAvailable = status.ticketsAvailable;
+      },
+      error: (err) => {
+        console.error('Error fetching ticket status:', err);
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup the subscription to avoid memory leaks
+    this.statusSubscription?.unsubscribe();
   }
 }
