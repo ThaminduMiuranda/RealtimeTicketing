@@ -8,6 +8,8 @@ import org.thamindu.realtimeticketing.model.Configuration;
 import org.thamindu.realtimeticketing.service.SimulationService;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/simulation")
@@ -26,20 +28,24 @@ public class SimulationController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<String> startSimulation() {
+    public ResponseEntity<Map<String, String>> startSimulation() {
         try {
             Configuration config = Configuration.loadConfiguration();
             simulationService.startSimulation(config);
-            return ResponseEntity.ok("Simulation started successfully.");
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Simulation started successfully.");
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Failed to load configuration.");
+            return ResponseEntity.status(500).body(Map.of("error", "Failed to load configuration."));
         }
     }
 
     @PostMapping("/stop")
-    public ResponseEntity<String> stopSimulation() {
+    public ResponseEntity<Map<String, String>> stopSimulation() {
         simulationService.stopSimulation();
-        return ResponseEntity.ok("Simulation stopped successfully.");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Simulation stopped.");
+        return ResponseEntity.ok(response);
     }
 }
