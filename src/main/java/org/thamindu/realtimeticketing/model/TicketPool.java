@@ -2,6 +2,8 @@ package org.thamindu.realtimeticketing.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.thamindu.realtimeticketing.util.LoggerUtil;
 
 import java.util.Collections;
@@ -20,17 +22,21 @@ import java.util.concurrent.Semaphore;
  * @author Thamindu Miuranda
  *
  */
+@Component
 public class TicketPool {
 
     private static final Logger logger = LogManager.getLogger(TicketPool.class);
 
     private final List<String> tickets;
+    @Value("${ticket.pool.maxCapacity:50}")
     private final int maxCapacity;
     private final Semaphore ticketsAvailable;
     private final Semaphore spaceAvailable;
 
+    @Value("${ticket.pool.totalTickets:100}")
     private final int totalTickets;
     private int ticketsAdded = 0;
+    private int ticketsSold = 0;
 
     /**
      * Constructs a {@code TicketPool} with a specific maximum capacity
@@ -38,7 +44,7 @@ public class TicketPool {
      * @param maxCapacity the maximum number of tickets that can be held in the pool.
      * @throws IllegalArgumentException if the maximum capacity is less than or equal to zero.
      */
-    public TicketPool(int maxCapacity, int totalTickets){
+    public TicketPool(@Value("${ticket.pool.maxCapacity:50}") int maxCapacity, @Value("${ticket.pool.totalTickets:100}") int totalTickets){
         if (maxCapacity <= 0) {
 //            LoggerUtil.error("Invalid maximum capacity: " + maxCapacity);
             logger.error("Invalid maximum capacity: {}", maxCapacity);
@@ -109,6 +115,7 @@ public class TicketPool {
                     logger.info("Ticket pool is empty. Waiting...");
                 }
                 ticket = tickets.removeFirst(); // Remove ticket from the queue.
+                ticketsSold++;
                 if (ticket != null) {
 //                    LoggerUtil.info("Ticket removed: " + ticket);
                     logger.info("Ticket removed: {}", ticket);
@@ -125,6 +132,18 @@ public class TicketPool {
             return null;
         }
 
+    }
+
+    public int getTotalTickets() {
+        return totalTickets; // Return the `totalTickets` field from your class
+    }
+
+    public int getTicketsSold() {
+        return ticketsSold; // Return the number of tickets sold
+    }
+
+    public int getTicketsAdded() {
+        return ticketsAdded;
     }
 
     /**
