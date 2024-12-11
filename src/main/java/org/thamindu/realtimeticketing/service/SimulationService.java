@@ -9,6 +9,7 @@ import org.thamindu.realtimeticketing.model.TicketPool;
 import org.thamindu.realtimeticketing.model.Vendor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -45,6 +46,18 @@ public class SimulationService {
             return;
         }
         isRunning = true;
+
+        // Reload configuration explicitly
+        try {
+            Configuration newConfig = Configuration.loadConfiguration();
+            ticketPool.initialize(newConfig.getMaxTicketCapacity(), newConfig.getTotalTickets());
+            config = newConfig; // Update the passed config object
+        } catch (IOException e) {
+            logger.error("Failed to load configuration: {}", e.getMessage());
+            stopSimulation();
+            return;
+        }
+        logger.info("TicketPool reinitialized: Max Capacity = {}, Total Tickets = {}", config.getMaxTicketCapacity(), config.getTotalTickets());
 //        messagingTemplate.convertAndSend("/topic/simulation", "started");
 
         ticketPool.initialize(config.getMaxTicketCapacity(), config.getTotalTickets());
@@ -67,7 +80,7 @@ public class SimulationService {
             executorService.submit(customer);
         }
 //        logger.info("TicketPool instance in SimulationService: {}", ticketPool.hashCode());
-//        logger.info("Simulation started with configuration: {}", config);
+        logger.info("Simulation started with configuration: {}", config);
     }
 
     public void stopSimulation() {
