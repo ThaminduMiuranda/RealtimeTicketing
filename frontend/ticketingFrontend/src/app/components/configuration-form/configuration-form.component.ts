@@ -124,23 +124,46 @@ export class ConfigurationFormComponent implements OnInit{
    * Handles the form submission
    */
   onSubmit():void{
-    this.configService.saveConfiguration(this.configuration).subscribe({
-      next: (v)=>{
-        console.log('Data entered to the Json:', this.configuration, v);
-        this.toast.success(
-          'Configuration has been saved successfully',
-          'Success'
-        );
-      },
-      error: (e) => {
-        console.error('Error saving configuration:', e);
-        this.toast.success(
-          'Error saving configuration' + e.message,
-          'Error'
-        );
+    if (this.isFormValid()){
+      this.configService.saveConfiguration(this.configuration).subscribe({
+        next: (v) => {
+          console.log('Data entered to the Json:', this.configuration, v);
+          this.toast.success(
+            'Configuration has been saved successfully',
+            'Success'
+          );
+        },
+        error: (e) => {
+          console.error('Error saving configuration:', e);
+          this.toast.success(
+            'Error saving configuration' + e.message,
+            'Error'
+          );
+        }
       }
-  }
     );
+    } else {
+      console.error('Invalid input. Please check the form');
+    }
+  }
+
+  isFormValid():boolean{
+    return (
+      this.isInteger(this.configuration.totalTickets) &&
+        this.configuration.totalTickets > 1 &&
+        this.isInteger(this.configuration.ticketReleaseRate) &&
+        this.configuration.ticketReleaseRate > 1 &&
+        this.configuration.ticketReleaseRate <= this.configuration.totalTickets &&
+        this.isInteger(this.configuration.customerRetrievalRate) &&
+        this.configuration.customerRetrievalRate > 1 &&
+        this.configuration.customerRetrievalRate <= this.configuration.totalTickets &&
+        this.isInteger(this.configuration.maxTicketCapacity) &&
+        this.configuration.maxTicketCapacity> 1
+    )
+  }
+
+  private isInteger(value: any): boolean {
+    return Number.isInteger(value);
   }
 
 

@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary" [disabled]="configForm.invalid">
+    <button type="submit" class="btn btn-primary" [disabled]="configForm.invalid || !isFormValid()">
       Save Configuration
     </button>
   </form>
