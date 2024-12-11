@@ -3,7 +3,7 @@
   <div *ngIf="logs$ | async as logs">
     <div *ngIf="logs.length === 0" class="no-logs">No logs available.</div>
     <ul *ngIf="logs.length > 0">
-      <li *ngFor="let log of logs" class="log-item">
+      <li *ngFor="let log of logs" [ngClass]="getLogClass(log)" class="log-item">
         <span class="log-message">{{ log }}</span>
       </li>
     </ul>

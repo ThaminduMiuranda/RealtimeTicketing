@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {interval, Observable, Subject, Subscription, switchMap, takeUntil} from 'rxjs';
 import { LogService } from '../../services/log.service';
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {SimulationStateService} from '../../services/simulation-state.service';
 
 @Component({
@@ -11,7 +11,8 @@ import {SimulationStateService} from '../../services/simulation-state.service';
   imports: [
     AsyncPipe,
     NgIf,
-    NgForOf
+    NgForOf,
+    NgClass
   ]
 })
 export class LogDisplayComponent implements OnInit, OnDestroy {
@@ -48,6 +49,17 @@ export class LogDisplayComponent implements OnInit, OnDestroy {
         console.error('Error fetching logs:', err);
       },
     });
+  }
+
+  getLogClass(log: string): string {
+    if (log.includes('INFO')) {
+      return 'log-info';
+    } else if (log.includes('ERROR')) {
+      return 'log-error';
+    } else if (log.includes('WARN')) {
+      return 'log-warn';
+    }
+    return '';
   }
 
 
