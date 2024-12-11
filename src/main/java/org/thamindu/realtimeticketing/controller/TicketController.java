@@ -20,7 +20,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:4200")
 public class TicketController {
 
-    private static final Logger logger = LogManager.getLogger(TicketController.class);
+//    private static final Logger logger = LogManager.getLogger(TicketController.class);
     private TicketPool ticketPool;
 
 

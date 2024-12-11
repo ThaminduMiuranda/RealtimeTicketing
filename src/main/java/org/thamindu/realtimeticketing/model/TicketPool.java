@@ -138,7 +138,6 @@ public class TicketPool {
                     availableTickets --;
                 }
                 if (ticket != null) {
-//                    LoggerUtil.info("Ticket removed: " + ticket);
                     logger.info("Ticket removed: {}", ticket);
                 }
 
@@ -222,6 +221,6 @@ public class TicketPool {
         this.ticketsAvailable = new Semaphore(0);
         this.spaceAvailable = new Semaphore(maxCapacity);
         this.isStopped = false;
-        logger.info("TicketPool reinitialized: Max Capacity = {}, Total Tickets = {}", maxCapacity, totalTickets);
+//        logger.info("TicketPool reinitialized: Max Capacity = {}, Total Tickets = {}", maxCapacity, totalTickets);
     }
 }

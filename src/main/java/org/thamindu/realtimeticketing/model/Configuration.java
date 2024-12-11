@@ -77,7 +77,7 @@ public class Configuration implements Serializable {
             try (Reader reader = new FileReader(file)){
                 Gson gson = new Gson();
                 Configuration config = gson.fromJson(reader, Configuration.class);
-                logger.info("Configuration loaded from {}",CONFIG_FILE);
+//                logger.info("Configuration loaded from {}",CONFIG_FILE);
                 return config;
             }
         } else {

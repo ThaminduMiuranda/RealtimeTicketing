@@ -9,7 +9,6 @@ import org.thamindu.realtimeticketing.model.Vendor;
 import org.thamindu.realtimeticketing.service.InputService;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,6 @@ public class TicketingSystemCLI {
         List<Vendor> vendors = new ArrayList<>();
         List<Customer> customers = new ArrayList<>();
 
-//        LoggerUtil.info(config.toString());
         logger.info(config.toString());
 
         for (int i = 0; i < numVendorThreads; i++) {
@@ -82,7 +80,6 @@ public class TicketingSystemCLI {
             try {
                 Thread.sleep(1000);
             }catch (InterruptedException e){
-//                LoggerUtil.error("com.W2051890.ticketing_system.Main thread interrupted.");
                 logger.error("com.W2051890.ticketing_system.Main thread interrupted.");
                 Thread.currentThread().interrupt();
                 break;
@@ -92,7 +89,6 @@ public class TicketingSystemCLI {
         vendors.forEach(Vendor::stop);
         customers.forEach(Customer::stop);
 
-//        executorService.shutdown();
 
         try {
             if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
@@ -105,13 +101,8 @@ public class TicketingSystemCLI {
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
-
-//        if (executorService.isShutdown()){
-//
-//        }
             logger.info("Simulation complete. All tickets added and sold.");
 
-//        LoggerUtil.info("Simulation complete. All tickets added and sold.");
     }
 
 

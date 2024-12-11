@@ -32,11 +32,9 @@ public class SimulationService {
     private List<Customer> customers;
     private volatile boolean isRunning = false;
 
-//    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     public SimulationService( TicketPool ticketPool) {
-//        this.messagingTemplate = messagingTemplate;
         this.ticketPool = ticketPool;
     }
 
@@ -58,7 +56,6 @@ public class SimulationService {
             return;
         }
         logger.info("TicketPool reinitialized: Max Capacity = {}, Total Tickets = {}", config.getMaxTicketCapacity(), config.getTotalTickets());
-//        messagingTemplate.convertAndSend("/topic/simulation", "started");
 
         ticketPool.initialize(config.getMaxTicketCapacity(), config.getTotalTickets());
         int numVendorThreads = Math.max(1, config.getTotalTickets() / config.getTicketReleaseRate());
@@ -89,7 +86,6 @@ public class SimulationService {
             return;
         }
         isRunning = false;
-//        messagingTemplate.convertAndSend("/topic/simulation", "stopped");
 
         for (Vendor vendor : vendors) {
             vendor.stop();

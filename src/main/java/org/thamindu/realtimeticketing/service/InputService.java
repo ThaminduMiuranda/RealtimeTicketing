@@ -25,11 +25,9 @@ public class InputService {
                 if (input >= min && input <= max){
                     return input;
                 }else {
-//                    LoggerUtil.warn("Input must be between "+min+" and "+max+".");
                     logger.warn("Input must be between {} and {}.", min, max);
                 }
             }catch (NumberFormatException e){
-//                LoggerUtil.error("Invalid input. Please enter a valid integer.");
                 logger.error("Invalid input. Please enter a valid integer.");
             }
         }
