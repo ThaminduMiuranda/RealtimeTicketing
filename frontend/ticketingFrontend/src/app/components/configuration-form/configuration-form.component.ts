@@ -78,12 +78,14 @@ import {HttpClient} from '@angular/common/http';
 import {ConfigurationService} from '../../services/configuration.service';
 import {Observable} from 'rxjs';
 import {ToastService} from '../../services/toast.service';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-configuration-form',
   templateUrl: './configuration-form.component.html',
   imports: [
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   styleUrls: ['configuration-form.component.scss']
 })

@@ -8,52 +8,74 @@
         id="totalTickets"
         name="totalTickets"
         [(ngModel)]="configuration.totalTickets"
+        #totalTickets="ngModel"
         required
         min="1"
         class="form-control"
       />
+      <div *ngIf="totalTickets.invalid && totalTickets.touched" class="error">
+        Total Tickets must be an integer greater than 1.
+      </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" [class.invalid]="ticketReleaseRate.invalid && ticketReleaseRate.touched">
       <label for="ticketReleaseRate">Ticket Release Rate:</label>
       <input
         type="number"
         id="ticketReleaseRate"
         name="ticketReleaseRate"
         [(ngModel)]="configuration.ticketReleaseRate"
+        #ticketReleaseRate = "ngModel"
         required
         min="1"
         class="form-control"
       />
+      <div *ngIf="ticketReleaseRate.invalid && ticketReleaseRate.touched" class="error">
+        Ticket Release Rate must be an integer greater than 1.
+      </div>
+      <div *ngIf="ticketReleaseRate.value > totalTickets.value" class="error">
+        Ticket Release Rate cannot be greater than Total Tickets.
+      </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" [class.invalid]="customerRetrievalRate.invalid && customerRetrievalRate.touched">
       <label for="customerRetrievalRate">Customer Retrieval Rate:</label>
       <input
         type="number"
         id="customerRetrievalRate"
         name="customerRetrievalRate"
         [(ngModel)]="configuration.customerRetrievalRate"
+        #customerRetrievalRate="ngModel"
         required
         min="1"
         class="form-control"
       />
+      <div *ngIf="customerRetrievalRate.invalid && customerRetrievalRate.touched" class="error">
+        Customer Retrieval Rate must be an integer greater than 1.
+      </div>
+      <div *ngIf="customerRetrievalRate.value > totalTickets.value" class="error">
+        Customer Retrieval Rate cannot be greater than Total Tickets.
+      </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" [class.invalid]="maxTicketCapacity.invalid && maxTicketCapacity.touched">
       <label for="maxTicketCapacity">Maximum Ticket Capacity:</label>
       <input
         type="number"
         id="maxTicketCapacity"
         name="maxTicketCapacity"
         [(ngModel)]="configuration.maxTicketCapacity"
+        #maxTicketCapacity="ngModel"
         required
         min="1"
         class="form-control"
       />
+      <div *ngIf="maxTicketCapacity.invalid && maxTicketCapacity.touched" class="error">
+        Maximum Ticket Capacity must be an integer greater than 1.
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary" [disabled]="configForm.invalid">
       Save Configuration
     </button>
   </form>
