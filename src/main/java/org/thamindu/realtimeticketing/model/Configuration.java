@@ -11,17 +11,13 @@ import com.google.gson.GsonBuilder;
 import java.io.*;
 
 /**
- * The {@code Configuration} class is the system configuration for the Real-Time Event Ticketing System. It includes parameters to set up the ticketing environment.
+ * Represents the configuration settings for the Real-Time Event Ticketing System.
+ * This class encapsulates parameters such as total tickets, ticket release rate, customer retrieval rate,
+ * and the maximum ticket pool capacity. The configuration can be loaded from or saved to a file for persistence.
  *
- * <p>Parameters to configure:
- * <ul>
- *     <li>Total number of tickets available in the system</li>
- *     <li>Rate at which the tickets are released by vendors</li>
- *     <li>Rate at which the customers attempt to retrieve tickets</li>
- *     <li>Maximum capacity of tickets that can be held in at one time</li>
- * </ul>
- *
- * @author Thamindu Miuranda Hemachandra
+ * <p><strong>Rationale:</strong> Encapsulating system settings in a dedicated class allows
+ * for easier management, reusability, and separation of concerns. Using JSON for configuration
+ * ensures human-readable and modifiable settings.</p>
  */
 
 public class Configuration implements Serializable {
@@ -32,20 +28,46 @@ public class Configuration implements Serializable {
      */
     @Serial
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default configuration file path for saving and loading settings.
+     */
     private static final String DEFAULT_CONFIG_FILE = "config/system_config.json";
+
+    /**
+     * Customizable configuration file path via system properties.
+     */
     private static final String CONFIG_FILE = System.getProperty("config.file.path", DEFAULT_CONFIG_FILE);
 
-
+    /**
+     * Logger instance for the Configuration class.
+     * Used for logging configuration-related events and messages.
+     */
     private static final Logger logger = LogManager.getLogger(Configuration.class);
-
+    /**
+     * Total tickets that will be added to the ticket pool
+     */
     private int totalTickets;
+    /**
+     * The rate of tickets being added to the ticket pool
+     */
     private int ticketReleaseRate;
+    /**
+     * The rate of tickets retrieved by customers
+     */
     private int customerRetrievalRate;
+    /**
+     * Max capacity of the ticket pool
+     */
     private int maxTicketCapacity;
 
     /**
      * Default constructor.
-     * Initializes the configuration with default values, ensures that the application can start without immediate user input. This is useful for testing, development, or fallback scenarios where no custom configurations provided.
+     * Initializes the configuration with default values, ensuring that the application can
+     * start without requiring immediate user input.
+     *
+     * <p><strong>Rationale:</strong> Default values are essential for development, testing,
+     * and fallback scenarios where no custom configurations are provided.</p>
      */
     public Configuration(){
         this.totalTickets = 100;
@@ -55,13 +77,15 @@ public class Configuration implements Serializable {
     }
 
     /**
-     * Configuration constructor.
-     * Initializes the configuration.
+     * Parameterized constructor for creating a custom configuration.
      *
-     * @param totalTickets Total number of tickets in the system
-     * @param ticketReleaseRate Rate at which the tickets are released by vendors.
-     * @param customerRetrievalRate The Rate at which the customers attempt to retrieve the tickets.
-     * @param maxTicketCapacity Maximum capacity of tickets in the pool.
+     * @param totalTickets        Total number of tickets in the system.
+     * @param ticketReleaseRate   Rate at which vendors release tickets.
+     * @param customerRetrievalRate The Rate at which customers retrieve tickets.
+     * @param maxTicketCapacity   Maximum capacity of the ticket pool.
+     *
+     * <p><strong>Rationale:</strong> Allows initialization with specific values for flexibility
+     * and testing various system scenarios.</p>
      */
     public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity){
         this.totalTickets = totalTickets;
@@ -71,6 +95,15 @@ public class Configuration implements Serializable {
         logger.info("Configuration initialized with custom values.");
     }
 
+    /**
+     * Loads the configuration from the specified file path.
+     *
+     * @return the loaded Configuration object.
+     * @throws IOException if the configuration file cannot be read.
+     *
+     * <p><strong>Rationale:</strong> Persistent configurations allow the system to maintain
+     * state across sessions and simplify setup for recurring users.</p>
+     */
     public static Configuration loadConfiguration() throws IOException {
         File file = new File(CONFIG_FILE);
         if (file.exists()){
@@ -88,6 +121,9 @@ public class Configuration implements Serializable {
         }
     }
 
+    /**
+     * Saves the current configuration to the specified file path.
+     */
     public void saveConfiguration(){
         try (Writer writer = new FileWriter(CONFIG_FILE)){
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -98,34 +134,74 @@ public class Configuration implements Serializable {
         }
     }
 
+    /**
+     * Gets the total number of tickets in the system.
+     *
+     * @return the total number of tickets.
+     */
     public int getTotalTickets() {
         return totalTickets;
     }
 
+    /**
+     * Sets the total number of tickets in the system.
+     *
+     * @param totalTickets the total number of tickets.
+     */
     public void setTotalTickets(int totalTickets) {
         this.totalTickets = totalTickets;
     }
 
+    /**
+     * Gets the rate at which vendors release tickets.
+     *
+     * @return the ticket release rate.
+     */
     public int getTicketReleaseRate() {
         return ticketReleaseRate;
     }
 
+    /**
+     * Sets the rate at which vendors release tickets.
+     *
+     * @param ticketReleaseRate the ticket release rate.
+     */
     public void setTicketReleaseRate(int ticketReleaseRate) {
         this.ticketReleaseRate = ticketReleaseRate;
     }
 
+    /**
+     * Gets the rate at which customers retrieve tickets.
+     *
+     * @return the customer retrieval rate.
+     */
     public int getCustomerRetrievalRate() {
         return customerRetrievalRate;
     }
 
+    /**
+     * Sets the rate at which customers retrieve tickets.
+     *
+     * @param customerRetrievalRate the customer retrieval rate.
+     */
     public void setCustomerRetrievalRate(int customerRetrievalRate) {
         this.customerRetrievalRate = customerRetrievalRate;
     }
 
+    /**
+     * Gets the maximum capacity of the ticket pool.
+     *
+     * @return the maximum ticket pool capacity.
+     */
     public int getMaxTicketCapacity() {
         return maxTicketCapacity;
     }
 
+    /**
+     * Sets the maximum capacity of the ticket pool.
+     *
+     * @param maxTicketCapacity the maximum ticket pool capacity.
+     */
     public void setMaxTicketCapacity(int maxTicketCapacity) {
         this.maxTicketCapacity = maxTicketCapacity;
     }

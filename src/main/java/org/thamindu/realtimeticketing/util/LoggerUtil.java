@@ -21,7 +21,16 @@ import java.time.format.DateTimeFormatter;
  */
 public class LoggerUtil {
 
+    /**
+     * The path to the log file where log entries will be written.
+     * Default value is {@code system.log}.
+     */
     private static final String LOG_FILE = "system.log";
+
+    /**
+     * DateTimeFormatter for formatting log entry timestamps.
+     * The pattern used is {@code yyyy-MM-dd HH:mm:ss}.
+     */
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**

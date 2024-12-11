@@ -6,9 +6,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * A test class for verifying the logging functionality.
+ * This class writes test log messages and verifies the existence and content of the log file.
+ */
 public class LoggerTest {
+
+    /**
+     * Logger instance for logging test-related events.
+     */
     private static final Logger logger = LogManager.getLogger(LoggerTest.class);
 
+    /**
+     * Main method to test the logging functionality.
+     * It writes test log messages and verifies the existence and content of the log file.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         String logFilePath = "logs/application.log";
 
