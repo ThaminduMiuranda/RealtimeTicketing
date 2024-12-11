@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/logs")
@@ -23,7 +24,14 @@ public class LogController {
     public ResponseEntity<List<String>> getLogs() {
         try {
             List<String> logs = Files.readAllLines(Paths.get(logFilePath));
-            return ResponseEntity.ok(logs);
+
+            List<String> filteredLogs = logs.stream()
+                    .filter(log ->
+                            log.contains("org.thamindu.realtimeticketing.model") ||
+                            log.contains("org.thamindu.realtimeticketing.service") ||
+                            log.contains("org.thamindu.realtimeticketing.controller"))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(filteredLogs);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
