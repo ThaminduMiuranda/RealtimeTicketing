@@ -1,0 +1,7 @@
+unnamed package
+org.thamindu.realtimeticketing
+org.thamindu.realtimeticketing.config
+org.thamindu.realtimeticketing.controller
+org.thamindu.realtimeticketing.model
+org.thamindu.realtimeticketing.service
+org.thamindu.realtimeticketing.util

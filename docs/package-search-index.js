@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.thamindu.realtimeticketing"},{"l":"org.thamindu.realtimeticketing.config"},{"l":"org.thamindu.realtimeticketing.controller"},{"l":"org.thamindu.realtimeticketing.model"},{"l":"org.thamindu.realtimeticketing.service"},{"l":"org.thamindu.realtimeticketing.util"}];updateSearchResults();
